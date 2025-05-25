@@ -1,141 +1,99 @@
-* 此项目引用至查尔斯
+# vitepress theme blog pure
 
-[English](./README.en.md) | 中文
+## 动机
 
-# 查尔斯的知识库
+一直想找一个架构足够干净的 ssg 程序，hexo,hugo,vuepress,docsify 等各种网上能找的都试了，总有不满意的地方，包括这些程序的主题也没有直接满意的（编程语言不会，功能太多，生成的 html 的文件还有不少插件的残留等）。
 
-<a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
-    <img src="https://img.shields.io/badge/文章%20License-CC%204.0%20BY--SA-blue.svg">
-</a>
-<a href="https://github.com/Charles7c/charles7c.github.io/blob/main/LICENSE" target="_blank">
-    <img src="https://img.shields.io/badge/源码%20License-MIT-blue.svg">
-</a>
-<a href="https://github.com/Charles7c/charles7c.github.io/actions/workflows/deploy-pages.yml" target="_blank">
-    <img src="https://github.com/Charles7c/charles7c.github.io/actions/workflows/deploy-pages.yml/badge.svg">
-</a>
+vitepress 足够轻量，系统干净，博客主题这块又是空白，所以做一个自己满意的博客主题吧，诉求就是功能可以少，但要足够的轻量。
 
+认真来说对比博客程序的话，其实当前的功能更像是线上笔记展示。
 
-📝 **查尔斯的个人知识库，记录 & 分享个人碎片化、结构化、体系化的知识内容。** 
+**计划中的功能**
+-   [ ] 等 vitepress 本身稳定了，就做成 npm package 方式的 theme **keep going**
+-   [x] 修改原有的评论模块为Giscus，因为原有的有不少问题，新的安装地址：https://giscus.app/ 请按照giscus官网的指导操作更换`.vitepress/theme/components/CommentGiscus.vue`中的信息
+-   [x] 发布时排除 `trash` `private-notes` `draft` 这三个目录的md文档
+-   [x] 搜索 - vitepress后来的版本天生本地搜索，对普通人来说比algolia好用，很省心
+-   [x] ~~留言 基于~~ [utteranc](https://utteranc.es/) ,⚠️2025-04-24 已经换成giscus
+-   [x] 分页?!
 
-🐢 [GitHub Pages（完整体验）](https://blog.charles7c.top) | 🐇 [Gitee Pages（无法评论）](https://charles7c.gitee.io)
+**不打算维护的功能**
+-   广告 - 一般人用不上
+-   上一篇｜下一篇 - 博客文章本来没什么关联性，价值不大
+## changelog
+[changelog](./changelog.md)
 
-## 开始
+## 使用方法
 
-```bash
-# 1.克隆本仓库
-git clone https://github.com/Charles7c/charles7c.github.io.git
-# 2.安装 PNPM
-npm install pnpm -g
-# 3.设置淘宝镜像源
-pnpm config set registry https://registry.npmmirror.com/
-# 4.安装依赖
-pnpm install
-# 5.dev 运行，访问：http://localhost:5173
-pnpm dev
-# 6.打包，文件存放位置：docs/.vitepress/dist
-# 如果是部署到 GitHub Pages，可以利用 GitHub Actions，在 push 到 GitHub 后自动部署打包
-# 详情见：.github/workflows/deploy-pages.yml，根据个人需要删减工作流配置
-pnpm build
-# 7.部署
-# 7.1 push 到 GitHub 仓库，部署到 GitHub Pages：需要在仓库设置中启用 GitHub Pages（本仓库采用此种部署方式）
-# 7.2 在其他平台部署, 例如：Gitee Pages、Vercel、Netlify、个人虚拟主机、个人服务器等
+1.复制以下文件到你的项目根目录
+
+```
+├── .vitepress
+├── pages
+│   ├── about.md
+│   ├── archives.md
+│   └── tags.md
+├── posts            //存放博客文章
+├── public           //[可选]
+    └── favicon.ico
 ```
 
-## 已扩展功能（持续优化细节）
+2.新建一个 package.json 文件,执行 npm i,包信息自己看着调整
 
-- [x] 拆分配置文件：解决“大”配置文件问题，提取公有配置选项进行复用，方便维护
+```json
+{
+    "name": "vitepress-blog-pure",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.ts",
+    "scripts": {
+        "dev": "vitepress dev --host 0.0.0.0",
+        "build": "vitepress build",
+        "preview": "vitepress preview"
+    },
+    "keywords": [],
+    "author": "",
+    "type": "module",
+    "license": "ISC",
+    "devDependencies": {
+        "vitepress": "^1.6.3",
+        "globby": "^14.1.0",
+        "gray-matter": "^4.0.3",
+        "fs-extra": "^11.3.0",
+        "vitepress-plugin-comment-with-giscus": "^1.1.15"
+    }
+}
+```
+3.修改 `.vitepress/config.ts` 中的基本配置信息（站点名称，评论仓库信息）  
+4.执行 `npm run dev` 即可查看效果, 其他工具随意 pnpm,yarn,bun 等
 
-- [x] GitHub Actions：push 到 GitHub，自动进行项目打包及 GitHub Pages 部署，并同步到 Gitee Pages（可根据个人需要自行删减同步 Gitee Pages 部分工作流配置）
+**ps. 写文章的格式和位置**  
+推荐放到 posts 目录中，格式：
 
-- [x] 自动生成侧边栏：将文章按规律性目录存放后，侧边栏将自动生成，支持文章置顶🔝（在文章 frontmatter 中配置 `isTop: true`，即可在侧边栏自动出现置顶分组）
+```markdown
+---
+date: 2021-06-30
+title: .zsh_history历史记录优化
+description: 历史重复的命令太多了，不用grep都不太好找
+tags:
+    - macOS
+---
 
-- [x] 主页美化：参照 vite 文档主页进行美化
+# .zsh_history历史记录优化  -- 用{{ $frontmatter.title }}会影响本地查询，可惜
+正文
+```
 
-- [x] 自定义页脚：支持ICP备案号、公安备案号、版权信息配置（符合大陆网站审核要求）
+**其中 title 为必须有的内容，其他随意，推荐含有 date,不然会默认一个当前时间，推荐含有 tags，这样也可以在标签页面显示**
 
-- [x] 文章元数据信息显示：文章标题下显示作者、发布时间、所属分类、标签列表等信息，可全局配置作者及作者主页信息
+## 感谢
 
-  - [x] 已扩展文章阅读数信息，默认已启用，可在 docs/.vitepress/config/theme.ts 中 articleMetadataConfig 配置中关闭（开启需要自行提供并配置好 API 服务，API 服务可参考：[Charles7c/charles7c-api](https://github.com/Charles7c/charles7c-api)，目前来看搞起来还有点麻烦，不喜欢折腾的可以直接关闭或更换其他方式提供 API 服务，欢迎提建议）
+其实没怎么写过 nodejs,从掘金看到的一篇文章带来的灵感 - [VitePress 极简博客搭建](https://juejin.cn/post/6896382276389732359)
 
-- [x] 《我的标签》：模仿语雀标签页风格，另有标签云展示。语雀标签页地址：https://www.yuque.com/r/语雀用户名/tags?tag=
+主要的变化是适配 vitepress 的新版本，主题这块采用的实现思路不一样，并不改动官方默认主题，这样可以实现极少的代码量和为将来能发布成 npm 主题包的做准备。
 
-- [x] 《我的归档》：自定义时间轴，展示历史文章数据。年份前可展示生肖，还可按分类、标签筛选
+比如：  
+sidebar 使用 hackcss 的方式实现想要的效果
 
-- [x] 文章评论：目前仅支持Gitalk
+## License
 
-- [x] 版权声明：文末显示文章版权声明，可自由配置采用的版权协议
-
-- [x] ~~徽章：标题后可显示徽章，此功能来自于 VitePress 未合并的 PR，如若后续被合并，则改用官方主题功能（[官方已合并于 v1.0.0-alpha.27](https://github.com/vuejs/vitepress/issues/1239)）~~
-
-- [x] 本地文档搜索支持：VitePress 官方目前仅提供了对接 algolia 的在线搜索配置，而且对接起来的流程也较为麻烦。所幸寻到一个本地文档搜索插件 [emersonbottero/vitepress-plugin-search](https://github.com/emersonbottero/vitepress-plugin-search)，如需体验，可将 `docs/vite.config.ts` 文件中的注释去除掉。
-
-  注意：本地文档搜索和 algolia 搜索无法同时使用，开启本地文档搜索后 algolia 搜索配置将不再生效。
-
-- [x] Mermaid 流程图：在 Markdown 中绘制流程图、状态图、时序图、甘特图、饼图等，更多语法请参见：[Mermaid 官方文档](https://github.com/mermaid-js/mermaid/blob/develop/README.zh-CN.md) 。（Typora 编辑器也支持 `mermaid` 语法）
-
-- [x] 更多细节优化：敬请发现
-  - [x] 文章内图片增加圆角样式优化（[#56](https://github.com/Charles7c/charles7c.github.io/issues/56)）
-  - [x] 浏览器滚动条样式优化（支持 Firfox、谷歌系浏览器）（[#69](https://github.com/Charles7c/charles7c.github.io/pull/69)）
-  - [x] 侧边栏分组中的文章列表增加序号显示
-  - [x] ......
-
-
-## 部分页面截图
-
-### 主页美化
-
-![主页](./docs/public/screenshot/主页.png)
-
-### 侧边栏置顶分组（自动生成侧边栏及置顶分组）
-
-![侧边栏置顶分组](./docs/public/screenshot/侧边栏置顶分组.png)
-
-### 文章元数据信息
-
-![文章元数据信息](./docs/public/screenshot/文章元数据信息.png)
-
-### 我的标签
-
-![我的标签](./docs/public/screenshot/我的标签1.png)
-![我的标签](./docs/public/screenshot/我的标签2.png)
-
-### 我的归档
-
-![我的归档](./docs/public/screenshot/我的归档1.png)
-![我的归档](./docs/public/screenshot/我的归档2.png)
-
-### 文章评论
-
-![文章评论](./docs/public/screenshot/文章评论1.png)
-![文章评论](./docs/public/screenshot/文章评论2.png)
-![文章评论](./docs/public/screenshot/文章评论3.png)
-
-### 版权声明
-
-![版权声明](./docs/public/screenshot/版权声明.png)
-
-### 本地文档搜索
-
-![本地文档搜索](./docs/public/screenshot/本地文档搜索.png)
-
-### Mermaid 流程图
-
-![Mermaid流程图](./docs/public/screenshot/Mermaid流程图1.png)
-![Mermaid流程图](./docs/public/screenshot/Mermaid流程图2.png)
-
-## 致谢
-
-- [vuejs/vitepress](https://github.com/vuejs/vitepress) （本知识库基于 VitePress 构建）
-- [vitejs/vite](https://github.com/vitejs/vite) （参考主页美化）
-- [windicss/docs](https://github.com/windicss/docs) （参考配置文件拆分）
-- [brc-dd/vitepress-blog-demo](https://github.com/brc-dd/vitepress-blog-demo) （感谢 VitePress 维护者 brc-dd 的热心帮助）
-- [brc-dd/vitepress-with-arco](https://github.com/brc-dd/vitepress-with-arco) 
-- [clark-cui/vitepress-blog-zaun](https://github.com/clark-cui/vitepress-blog-zaun) （参考文章标签的数据处理方案）
-- [dingqianwen/my-blog](https://github.com/dingqianwen/my-blog) （参考 Gitalk 配置暗黑主题）
-- [Dedicatus546/Dedicatus546.github.io](https://github.com/Dedicatus546/Dedicatus546.github.io) （参考 Gitalk 跨域调用 API 失效的解决方案）
-- [xiaoxian521/pure-admin-utils-docs](https://github.com/xiaoxian521/pure-admin-utils-docs) （参考词云组件的使用）
-- [arco-design/arco-design-vue](https://github.com/arco-design/arco-design-vue) （使用部分组件及图标）
-- [antvis/G2plot](https://github.com/antvis/G2plot) （使用部分图表）
-- [emersonbottero/vitepress-plugin-search](https://github.com/emersonbottero/vitepress-plugin-search) （VitePress 本地文档搜索插件）
-- [mermaid-js/mermaid](https://github.com/mermaid-js/mermaid/blob/develop/README.zh-CN.md)
-- ......
+[MIT](https://opensource.org/licenses/MIT)  
+Copyright (c) 2021-present, Airene
