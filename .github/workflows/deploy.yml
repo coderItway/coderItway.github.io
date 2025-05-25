@@ -9,13 +9,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '18.x'  # 指定 18.x 或更高
-          cache: 'pnpm'        # 可选，启用 pnpm 缓存
-      - run: npm i pnpm -g
-      - run: pnpm install --frozen-lockfile
+          node-version: '18.x'
+          cache: 'pnpm' # 缓存依赖
+
+      # 启用 corepack（Node.js 16.9+ 内置工具）
+      - name: Enable corepack (for pnpm)
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm docs:build
