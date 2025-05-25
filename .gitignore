@@ -1,13 +1,30 @@
-node_modules
+# Node modules
+node_modules/
+
+# Dist files
+
+lib/
+
+# Test coverage files
+coverage/
+
+# MacOS Desktop Services Store
 .DS_Store
-dist
-dist-ssr
-*.local
+
+# Log files
+*.log
+
+# IDE setting files
 .idea
-smartmontools.md
-zsh_history.md
-/*.md
-!/changelog.md
-/package-lock.json
-origin_theme.css
-.vitepress/cache
+.vscode
+
+# Temp files
+cache/
+.vite_opt_cache
+
+# Other files
+/src/client/shared.ts
+/src/node/shared.ts
+pnpm-global
+TODOs.md
+article-data.json
